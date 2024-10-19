@@ -19,6 +19,11 @@ io.on('connection', (socket) => {
   socket.on('joinRoom', (roomId) => {
     socket.join(roomId);
     console.log(`User ${socket.id} joined room ${roomId}`);
+
+    const clientsInRoom = io.sockets.adapter.rooms.get(roomId);
+    const numClients = clientsInRoom ? clientsInRoom.size : 0;
+    console.log(`Number of clients in room ${roomId}: ${numClients}`);
+    io.to(roomId).emit('coderCount', numClients);
   });
 
   socket.on('codeChange', ({ roomId, code }) => {
@@ -29,6 +34,16 @@ io.on('connection', (socket) => {
   socket.on('languageChange', ({ roomId, language }) => {
     // console.log('language: ', language);
     io.to(roomId).emit('receiveLanguage', language);
+  });
+
+  socket.on('disconnecting', () => {
+    const rooms = Array.from(socket.rooms).slice(1); 
+    rooms.forEach((roomId) => {
+      const clientsInRoom = io.sockets.adapter.rooms.get(roomId);
+      const numClients = clientsInRoom ? clientsInRoom.size - 1 : 0;
+      console.log(`Updated number of clients in room ${roomId}: ${numClients}`);
+      io.to(roomId).emit('coderCount', numClients);
+    });
   });
 
   socket.on('disconnect', () => {

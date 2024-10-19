@@ -18,6 +18,7 @@ import { useLocation } from "react-router";
 interface ServerToClientEvents {
   receiveCode: (code: string) => void;
   receiveLanguage: (lang: string) => void;
+  coderCount: (count: number) => void;
 }
 
 interface ClientToServerEvents {
@@ -28,6 +29,7 @@ interface ClientToServerEvents {
 
 export default function Code() {
   const [code, setCode] = useState("");
+  const [coderCount, setCoderCount] = useState(0);
   const editorRef = useRef<HTMLDivElement>(null);
   const [lineNumbers, setLineNumbers] = useState("1");
   const [language, setLanguage] = useState(languages[languages.length - 1]);
@@ -98,6 +100,10 @@ export default function Code() {
       setLanguage(lang);
     });
 
+    socketX.on("coderCount", (count) => {
+      setCoderCount(count);
+    });
+
     return () => {
       socketX.off("receiveCode");
       socketX.disconnect();
@@ -106,7 +112,7 @@ export default function Code() {
 
   return (
     <div>
-      <Header />
+      <Header count={coderCount} />
 
       <main className="flex relative">
         {/* Line Numbers */}
