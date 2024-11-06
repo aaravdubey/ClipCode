@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,4 +6,33 @@
 :root {
   background-color: #1f2328;
   color: #fff;
+  font-family: "Exo 2", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+/* For WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #1a1d1f; /* Dark background for the track */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #3a3d40; /* Slightly lighter dark color for the thumb */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #525559; /* Lighter color on hover for the thumb */
+}
+
+/* Firefox scrollbar (using CSS Scrollbars Module) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #3a3d40 #1a1d1f;
 }

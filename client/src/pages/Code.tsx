@@ -47,7 +47,7 @@ export default function Code() {
 
     const editorHeight = editorRef.current.clientHeight;
     const numberOfLines = Math.ceil(editorHeight / lineHeight);
-    console.log(editorHeight, numberOfLines);
+    // console.log(editorHeight, numberOfLines);
     const lineNumbersString = Array.from(
       { length: numberOfLines },
       (_, i) => i + 1
@@ -69,6 +69,8 @@ export default function Code() {
   };
 
   const handleCodeChange = (code: string) => {
+    console.log(code);
+
     setCode(code);
     if (socket) socket.emit("codeChange", { roomId, code });
   };
@@ -81,6 +83,9 @@ export default function Code() {
   useEffect(() => {
     calculateLineNumbers();
   }, [code]);
+
+  const focusOnEditor = () =>
+    editorRef.current?.querySelector("textarea")?.focus();
 
   useEffect(() => {
     let socketX: Socket<ServerToClientEvents, ClientToServerEvents>;
@@ -111,17 +116,15 @@ export default function Code() {
   }, []);
 
   return (
-    <div>
-      <Header count={coderCount} />
-
-      <main className="flex relative">
+    <div className="max-h-screen">
+      <main className="flex h-[94vh] relative overflow-auto">
         {/* Line Numbers */}
-        <div className="min-h-screen px-4 text-[12px] select-none text-gray-500 bg-[#1a1d1f]">
-          <pre>{lineNumbers}</pre>
+        <div className="text-[12px] select-none text-gray-500 bg-[#1a1d1f]">
+          <pre className="bg-[#1a1d1f] px-1.5 xs:px-4">{lineNumbers}</pre>
         </div>
 
         {/* Code Editor */}
-        <div className="flex-1 px-2">
+        <div className="flex-1 px-2" onClick={focusOnEditor}>
           <div ref={editorRef}>
             <Editor
               value={code}
@@ -144,6 +147,8 @@ export default function Code() {
           handleCopy={handleCopy}
         />
       </main>
+
+      <Header count={coderCount} />
     </div>
   );
 }

@@ -36,7 +36,7 @@ export default function DropDown({
   };
 
   return (
-    <div className="absolute top-0.5 right-2 inline-block text-left">
+    <div className="fixed top-0.5 right-4 inline-block text-left">
       <div className="flex gap-3 items-start">
         <Tippy
           content={<span className="text-xs">{tooltipText}</span>}
@@ -84,10 +84,14 @@ export default function DropDown({
             tabIndex={-1}
           >
             <div role="none">
-              {languages.map((lang) => (
+              {languages.map((lang, index) => (
                 <button
                   key={lang}
-                  className="w-full block p-2 text-xs text-left hover:bg-[#272626] overflow-hidden"
+                  className={`w-full block p-2 text-xs text-left ${
+                    lang == language && "bg-[#272626]"
+                  } ${
+                    languages.length != index + 1 && "border-b-[1px]"
+                  } border-grayy hover:bg-[#272626] overflow-hidden`}
                   role="menuitem"
                   tabIndex={-1}
                   onClick={() => handleLanguageChange(lang)}

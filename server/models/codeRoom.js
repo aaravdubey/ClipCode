@@ -4,6 +4,8 @@ const roomSchema = new mongoose.Schema({
   name: { type: String, required: true, unique: true },
   code: { type: String, default: '' },
   language: { type: String, default: 'none' },
-  coderCount: { type: Number, default: 0 },
-  
-});
+}, { timestamps: true });
+
+const CodeRoom = mongoose.model('CodeRoom', roomSchema);
+
+export default CodeRoom;

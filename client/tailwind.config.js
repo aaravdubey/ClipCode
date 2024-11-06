@@ -9,6 +9,9 @@ export default {
       colors: {
         "grayy": "#1f2328",
         "dark-grayy": "#111315"
+      },
+      screens: {
+        "xs": "480px"
       }
     },
   },
