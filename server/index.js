@@ -5,11 +5,13 @@ import http from 'http';
 import { Server } from 'socket.io';
 import CodeRoom from './models/codeRoom.js';
 import { debounce } from './utils/debounce.js';
+import env from 'dotenv';
+env.config();
 
 const app = express();
 app.use(cors());
 
-mongoose.connect('mongodb://localhost:27017/clipcode', {
+mongoose.connect(process.env.DB_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -25,7 +27,7 @@ const io = new Server(server, {
 
 const debouncedCodeChange = debounce(async (roomId, code) => {
   await CodeRoom.findOneAndUpdate({ name: roomId }, { code }, { new: true });
-  console.log("updated");
+  // console.log("updated");
 }, 1000);
 
 const debouncedLanguageChange = debounce(async (roomId, language) => {
@@ -33,15 +35,15 @@ const debouncedLanguageChange = debounce(async (roomId, language) => {
 } , 1000);
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  // console.log('a user connected');
 
   socket.on('joinRoom', async (roomId) => {
     socket.join(roomId);
-    console.log(`User ${socket.id} joined room ${roomId}`);
+    // console.log(`User ${socket.id} joined room ${roomId}`);
 
     const clientsInRoom = io.sockets.adapter.rooms.get(roomId);
     const numClients = clientsInRoom ? clientsInRoom.size : 0;
-    console.log(`Number of clients in room ${roomId}: ${numClients}`);
+    // console.log(`Number of clients in room ${roomId}: ${numClients}`);
 
     const codeRoom = await CodeRoom.findOne({ name: roomId });
     // console.log(codeRoom);
@@ -74,13 +76,13 @@ io.on('connection', (socket) => {
     rooms.forEach((roomId) => {
       const clientsInRoom = io.sockets.adapter.rooms.get(roomId);
       const numClients = clientsInRoom ? clientsInRoom.size - 1 : 0;
-      console.log(`Updated number of clients in room ${roomId}: ${numClients}`);
+      // console.log(`Updated number of clients in room ${roomId}: ${numClients}`);
       io.to(roomId).emit('coderCount', numClients);
     });
   });
 
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    // console.log('user disconnected');
   });
 });
 
