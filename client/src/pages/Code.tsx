@@ -37,7 +37,6 @@ export default function Code() {
     ServerToClientEvents,
     ClientToServerEvents
   > | null>(null);
-  // const socket = io("http://localhost:3001");
   const roomId = useLocation().pathname.substring(1);
   // console.log(roomId);
   const lineHeight = 18;
@@ -91,7 +90,7 @@ export default function Code() {
     let socketX: Socket<ServerToClientEvents, ClientToServerEvents>;
     if (socket) socketX = socket;
     else {
-      socketX = io("http://localhost:3001");
+      socketX = io(import.meta.env.VITE_APP_SERVER_URL);
       setSocket(socketX);
     }
 
